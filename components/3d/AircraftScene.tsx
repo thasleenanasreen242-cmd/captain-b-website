@@ -1,65 +1,105 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Float, OrbitControls } from "@react-three/drei";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 
-function Aircraft() {
+function CabinShell() {
   return (
-    <Float speed={1} rotationIntensity={0.12} floatIntensity={0.5}>
-      <group rotation={[0, -0.35, 0]}>
-        <mesh scale={[3.8, 0.7, 0.7]}>
-          <sphereGeometry args={[1, 64, 32]} />
-          <meshStandardMaterial color="#f8fbff" metalness={0.35} roughness={0.25} />
+    <group>
+      <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
+        <cylinderGeometry args={[3.8, 3.8, 13, 64, 1, true, Math.PI / 2, Math.PI]} />
+        <meshPhysicalMaterial color="#f8fbff" transparent opacity={0.16} roughness={0.22} metalness={0.08} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position={[0, 0, -6.2]} rotation={[Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[3.75, 64]} />
+        <meshStandardMaterial color="#eaf7ff" metalness={0.1} roughness={0.35} />
+      </mesh>
+      {[-4.8, -2.4, 0, 2.4, 4.8].map((x) => (
+        <mesh key={x} position={[x, 0, 3.62]} rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.72, 0.08, 16, 48]} />
+          <meshStandardMaterial color="#d8f2ff" emissive="#7dd3fc" emissiveIntensity={0.18} metalness={0.35} roughness={0.22} />
         </mesh>
-        <mesh position={[3.55, 0, 0]} scale={[1.1, 0.62, 0.62]}>
-          <sphereGeometry args={[1, 48, 24]} />
-          <meshStandardMaterial color="#ffffff" metalness={0.25} roughness={0.2} />
+      ))}
+      {[-4.5, -2.25, 0, 2.25, 4.5].map((x) => (
+        <mesh key={`win-${x}`} position={[x, 0.02, 3.64]} rotation={[Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.58, 32]} />
+          <meshStandardMaterial color="#9edfff" emissive="#38bdf8" emissiveIntensity={0.28} roughness={0.12} metalness={0.1} />
         </mesh>
-        <mesh position={[0, -0.05, 0]} rotation={[0, 0, Math.PI / 2]} scale={[0.15, 2.8, 1]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#dbeafe" metalness={0.3} roughness={0.3} />
+      ))}
+    </group>
+  );
+}
+
+function Cockpit({ progress }: { progress: number }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    ref.current.position.y = THREE.MathUtils.lerp(ref.current.position.y, progress < 0.18 ? 0.15 : -0.5, delta * 2);
+  });
+  return (
+    <group ref={ref} position={[0, 0.2, 5.4]}>
+      <mesh position={[0, -1.15, 0]}>
+        <boxGeometry args={[5.4, 0.18, 1.2]} />
+        <meshStandardMaterial color="#dbeafe" metalness={0.5} roughness={0.2} />
+      </mesh>
+      {[-1.7, 0, 1.7].map((x) => (
+        <mesh key={x} position={[x, -0.55, -0.2]} rotation={[-0.18, 0, 0]}>
+          <boxGeometry args={[1.35, 0.85, 0.12]} />
+          <meshStandardMaterial color="#0f2740" emissive="#075985" emissiveIntensity={0.7} metalness={0.4} roughness={0.2} />
         </mesh>
-        <mesh position={[-2.8, 0.35, 0]} scale={[0.9, 0.12, 1.3]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#e5f3ff" metalness={0.3} roughness={0.3} />
-        </mesh>
-        <mesh position={[-2.8, 0.55, 0]} scale={[0.75, 1.3, 0.15]}>
-          <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#d9efff" metalness={0.25} roughness={0.3} />
-        </mesh>
-        {[-0.9, 0.9].map((z) => (
-          <group key={z} position={[0.2, -0.35, z]}>
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.25, 0.32, 1.1, 32]} />
-              <meshStandardMaterial color="#cbd5e1" metalness={0.7} roughness={0.2} />
-            </mesh>
-            <mesh position={[0, -0.57, 0]}>
-              <circleGeometry args={[0.18, 32]} />
-              <meshStandardMaterial color="#7dd3fc" emissive="#38bdf8" emissiveIntensity={2} />
-            </mesh>
-          </group>
-        ))}
-        {[-1.9, -1.4, -0.9, -0.4, 0.1, 0.6, 1.1, 1.6, 2.1].map((x) => (
-          <mesh key={x} position={[x, 0.48, 0.48]}>
-            <sphereGeometry args={[0.09, 24, 12]} />
-            <meshStandardMaterial color="#7dd3fc" emissive="#38bdf8" emissiveIntensity={0.4} metalness={0.4} roughness={0.15} />
-          </mesh>
-        ))}
-      </group>
-    </Float>
+      ))}
+      <mesh position={[0, 0.7, -0.5]} rotation={[0.18, 0, 0]}>
+        <boxGeometry args={[6, 2.8, 0.12]} />
+        <meshPhysicalMaterial color="#b9e9ff" transparent opacity={0.25} roughness={0.05} transmission={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+function ScrollCamera() {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? window.scrollY / max : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  useFrame((state) => {
+    const p = progress;
+    const targetZ = THREE.MathUtils.lerp(8.5, -8.5, p);
+    const targetY = THREE.MathUtils.lerp(2.4, 1.1, p);
+    state.camera.position.lerp(new THREE.Vector3(0, targetY, targetZ), 0.045);
+    state.camera.lookAt(0, 0.2, THREE.MathUtils.lerp(2.5, -2, p));
+  });
+  return <Cockpit progress={progress} />;
+}
+
+function AircraftEnvironment() {
+  return (
+    <>
+      <CabinShell />
+      <Float speed={0.55} rotationIntensity={0.015} floatIntensity={0.18}>
+        <Cockpit progress={0} />
+      </Float>
+      <ScrollCamera />
+    </>
   );
 }
 
 export default function AircraftScene() {
   return (
-    <div className="h-[420px] w-full">
-      <Canvas camera={{ position: [6, 2.5, 7], fov: 42 }}>
-        <ambientLight intensity={1.8} />
-        <directionalLight position={[5, 8, 5]} intensity={3} />
-        <pointLight position={[0, 2, 3]} intensity={2} color="#7dd3fc" />
+    <div className="pointer-events-none fixed inset-0 z-0 hidden h-screen w-full lg:block">
+      <Canvas camera={{ position: [0, 2.4, 8.5], fov: 48 }} dpr={[1, 1.5]}>
+        <ambientLight intensity={1.7} />
+        <directionalLight position={[4, 8, 6]} intensity={3.2} />
+        <pointLight position={[0, 1, 4]} intensity={2.5} color="#7dd3fc" />
         <Environment preset="city" />
-        <Aircraft />
-        <OrbitControls enableZoom={false} minPolarAngle={Math.PI / 2.8} maxPolarAngle={Math.PI / 2.1} />
+        <AircraftEnvironment />
       </Canvas>
     </div>
   );
