@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #dff4ff;
-  --foreground: #102a43;
+  --background: #02050a;
+  --foreground: #e6faff;
 }
 
 @theme inline {
@@ -14,39 +14,34 @@
 
 html {
   scroll-behavior: smooth;
-  background: #dff4ff;
+  background: #02050a;
+  scrollbar-color: #164e63 #02050a;
+  scrollbar-width: thin;
 }
 
 body {
   margin: 0;
-  background: linear-gradient(180deg, #bfe9ff 0%, #eaf8ff 45%, #d9f2ff 100%);
+  background: #02050a;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Captain B is a continuous aircraft experience. The 3D aircraft stays
-   behind the page while each knowledge compartment becomes a glass overlay. */
-main {
-  position: relative;
-  isolation: isolate;
-  background: transparent !important;
-}
-
-main > section {
-  background-color: transparent !important;
-}
-
-main > section:first-child {
-  min-height: 100vh;
-}
-
-/* Give the content a subtle aircraft-glass feel rather than flat webpage blocks. */
-main > section:not(:first-child) > div {
-  position: relative;
-  z-index: 2;
+* {
+  box-sizing: border-box;
 }
 
 ::selection {
-  background: #7dd3fc;
-  color: #082f49;
+  background: rgba(34, 211, 238, 0.35);
+  color: #ffffff;
+}
+
+/* Cinematic aircraft HUD details */
+.cockpit-glow {
+  box-shadow: 0 0 80px rgba(34, 211, 238, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
