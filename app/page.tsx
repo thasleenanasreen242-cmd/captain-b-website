@@ -3,170 +3,86 @@
 import { motion } from "framer-motion";
 import AircraftScene from "@/components/3d/AircraftScene";
 
-const topics = [
-  ["01", "AI & Technology", "What is changing, what matters, and how to use it intelligently."],
-  ["02", "Digital Marketing", "Practical lessons on brands, content, growth and digital strategy."],
-  ["03", "Business", "Ideas, experiments, systems and lessons from building things."],
-  ["04", "Branding", "How memorable brands are shaped through strategy and experience."],
-  ["05", "Law & Career", "Learning notes, professional development and useful frameworks."],
-  ["06", "Productivity", "Simple systems for learning, creating and getting things done."],
-];
-
-const log = [
-  ["Knowledge Note 001", "The things I am learning right now", "A running collection of ideas, observations and useful lessons."],
-  ["Knowledge Note 002", "AI is becoming a creative co-pilot", "How I think about using AI without losing the human part of the work."],
-  ["Knowledge Note 003", "Building in public", "Experiments, mistakes and the lessons that come from actually making things."],
+const panels = [
+  ["01", "ABOUT CAPTAIN B", "The pilot behind the ideas."],
+  ["02", "AI & TECHNOLOGY", "Explore what is changing and what matters."],
+  ["03", "BUSINESS & MARKETING", "Strategy, brands, growth and experiments."],
+  ["04", "KNOWLEDGE LOG", "Notes, lessons, case studies and useful discoveries."],
+  ["05", "RESOURCES", "Tools, templates and things worth keeping."],
+  ["06", "CONNECT", "Bring a question into the cockpit."],
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-hidden bg-white text-slate-900">
-      <section className="relative min-h-screen overflow-hidden bg-gradient-to-b from-sky-300 via-sky-100 to-white">
-        <div className="absolute -left-24 top-24 h-56 w-[55%] rounded-full bg-white/70 blur-3xl" />
-        <div className="absolute -right-32 top-72 h-64 w-[55%] rounded-full bg-white/70 blur-3xl" />
-        <motion.div
-          animate={{ x: [0, 80, 0] }}
-          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-16 left-0 h-44 w-[65%] rounded-full bg-white/60 blur-3xl"
-        />
+    <main className="min-h-[600vh] overflow-x-hidden bg-[#02070d] text-white">
+      <AircraftScene />
 
-        <nav className="relative z-30 mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-          <a href="#top" className="leading-none">
-            <span className="text-xl font-black tracking-tight">CAPTAIN <span className="text-sky-600">B</span></span>
-            <span className="mt-1 block text-[9px] font-bold uppercase tracking-[0.35em] text-slate-500">Knowledge cockpit</span>
-          </a>
-          <div className="hidden gap-7 text-sm font-semibold text-slate-600 md:flex">
-            <a href="#captain" className="hover:text-sky-600">Captain</a>
-            <a href="#topics" className="hover:text-sky-600">Explore</a>
-            <a href="#log" className="hover:text-sky-600">Knowledge Log</a>
-            <a href="#contact" className="hover:text-sky-600">Connect</a>
-          </div>
-          <a href="#topics" className="rounded-full border border-white/80 bg-white/60 px-5 py-2.5 text-xs font-bold uppercase tracking-wider shadow-lg backdrop-blur-xl hover:bg-white">Explore</a>
+      <div className="relative z-10">
+        <nav className="fixed left-0 right-0 top-0 z-30 flex items-center justify-between border-b border-white/10 bg-[#02070d]/45 px-6 py-5 backdrop-blur-xl">
+          <a href="#cockpit" className="font-black tracking-tight">CAPTAIN <span className="text-cyan-400">B</span></a>
+          <span className="hidden text-[9px] font-bold uppercase tracking-[0.4em] text-cyan-300/70 sm:block">Knowledge flight system</span>
+          <a href="#connect" className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-[10px] font-bold tracking-widest text-cyan-200">CONNECT</a>
         </nav>
 
-        <div id="top" className="relative z-10 mx-auto flex min-h-[calc(100vh-88px)] max-w-7xl flex-col items-center justify-center px-6 pb-10 text-center">
-          <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9 }}>
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/80 bg-white/50 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.28em] text-sky-700 shadow-lg backdrop-blur-xl">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-sky-500" /> Knowledge in flight
-            </div>
-            <p className="text-xs font-bold uppercase tracking-[0.45em] text-sky-700">Welcome to Captain B&apos;s world</p>
-            <h1 className="mt-4 text-5xl font-black leading-[0.92] tracking-tight sm:text-7xl md:text-8xl">
-              Ideas worth
-              <br />
-              <span className="text-sky-600">exploring.</span>
-            </h1>
-            <p className="mx-auto mt-7 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-              A personal knowledge space where Captain B shares what he learns about AI, technology, marketing, business, branding, career and creative thinking.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 70, scale: 0.88 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.2, delay: 0.25 }}
-            className="w-full max-w-5xl"
-          >
-            <AircraftScene />
-          </motion.div>
-
-          <motion.a
-            href="#captain"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1 }}
-            className="-mt-4 rounded-full bg-sky-600 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-sky-300/40 transition hover:scale-105 hover:bg-sky-700"
-          >
-            ENTER THE COCKPIT →
-          </motion.a>
-        </div>
-      </section>
-
-      <section id="captain" className="bg-white px-6 py-28 md:py-36">
-        <div className="mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-2">
-          <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-sky-600">The Captain</p>
-            <h2 className="mt-4 text-4xl font-black tracking-tight sm:text-6xl">Learn. Think.<br /><span className="text-sky-600">Share.</span></h2>
-            <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
-              Captain B is a digital avatar and knowledge-sharing identity built around curiosity. The goal is simple: take complicated ideas, explore them, and make them easier to understand and use.
-            </p>
-            <div className="mt-8 grid grid-cols-3 gap-3">
-              {["LEARN", "CREATE", "SHARE"].map((item) => <div key={item} className="rounded-2xl border border-sky-100 bg-sky-50 p-4 text-center text-xs font-bold tracking-wider text-sky-700">{item}</div>)}
-            </div>
-          </motion.div>
-          <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="rounded-[2rem] bg-gradient-to-br from-sky-100 to-white p-6 shadow-2xl">
-            <div className="flex aspect-square items-center justify-center rounded-[1.5rem] border border-white bg-white/50 shadow-inner backdrop-blur-xl">
-              <div className="text-center">
-                <div className="mx-auto flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-sky-700 text-5xl font-black text-white shadow-2xl">B</div>
-                <p className="mt-6 text-2xl font-black">CAPTAIN B</p>
-                <p className="mt-2 text-xs font-bold uppercase tracking-[0.3em] text-slate-400">Your knowledge co-pilot</p>
+        <section id="cockpit" className="flex min-h-screen items-center px-6 pt-20">
+          <div className="mx-auto w-full max-w-6xl">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1 }} className="max-w-2xl rounded-[2rem] border border-white/10 bg-black/35 p-7 shadow-2xl backdrop-blur-xl sm:p-10">
+              <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-cyan-300">Cockpit display · online</p>
+              <h1 className="mt-5 text-5xl font-black leading-[0.92] tracking-tight sm:text-7xl">Ideas worth<br /><span className="text-cyan-300">exploring.</span></h1>
+              <p className="mt-6 max-w-xl text-base leading-7 text-slate-300">Welcome to Captain B&apos;s knowledge cockpit — a digital space for learning, thinking and sharing ideas about AI, technology, business, marketing and more.</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#captain" className="rounded-full bg-cyan-400 px-6 py-3 text-xs font-black tracking-wider text-[#021019] shadow-lg shadow-cyan-400/20">ENTER THE COCKPIT →</a>
+                <a href="#knowledge" className="rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-bold tracking-wider text-white">EXPLORE KNOWLEDGE</a>
               </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section id="captain" className="flex min-h-screen items-center px-6 py-24">
+          <div className="mx-auto grid w-full max-w-6xl gap-8 md:grid-cols-[1fr_1.4fr]">
+            <div className="rounded-[2rem] border border-cyan-300/15 bg-[#07121d]/80 p-8 shadow-2xl backdrop-blur-xl">
+              <p className="text-[10px] font-bold tracking-[0.4em] text-cyan-300">LEFT DISPLAY · IDENTITY</p>
+              <div className="mt-10 flex h-52 items-center justify-center rounded-3xl border border-cyan-300/10 bg-gradient-to-br from-cyan-400/10 to-blue-500/5">
+                <div className="flex h-32 w-32 items-center justify-center rounded-full border border-cyan-300/40 bg-cyan-300/10 text-6xl font-black text-cyan-200 shadow-[0_0_70px_rgba(34,211,238,.2)]">B</div>
+              </div>
+              <h2 className="mt-7 text-3xl font-black">CAPTAIN B</h2>
+              <p className="mt-2 text-xs uppercase tracking-[0.3em] text-slate-500">Digital avatar · Knowledge explorer</p>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="topics" className="bg-sky-50 px-6 py-28 md:py-36">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-14 max-w-2xl">
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-sky-600">Navigation panel</p>
-            <h2 className="mt-4 text-4xl font-black sm:text-5xl">Choose your <span className="text-sky-600">route.</span></h2>
-            <p className="mt-5 text-lg leading-8 text-slate-500">Explore the subjects Captain B is learning, researching and sharing.</p>
+            <div className="flex items-center rounded-[2rem] border border-white/10 bg-black/35 p-8 backdrop-blur-xl sm:p-12">
+              <div><p className="text-[10px] font-bold tracking-[0.4em] text-cyan-300">CAPTAIN&apos;S LOG</p><h2 className="mt-5 text-4xl font-black sm:text-6xl">Learn.<br />Think.<br /><span className="text-cyan-300">Share.</span></h2><p className="mt-7 max-w-xl text-slate-300 leading-8">Captain B turns curiosity into useful knowledge. Follow the journey through ideas, experiments, lessons and discoveries.</p></div>
+            </div>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {topics.map(([number, title, text]) => (
-              <motion.article key={number} whileHover={{ y: -7 }} className="rounded-3xl border border-white bg-white/80 p-7 shadow-lg backdrop-blur-xl">
-                <span className="text-xs font-black tracking-widest text-sky-500">{number}</span>
-                <h3 className="mt-5 text-xl font-black">{title}</h3>
-                <p className="mt-3 leading-7 text-slate-500">{text}</p>
-                <button className="mt-6 text-sm font-bold text-sky-600">EXPLORE →</button>
-              </motion.article>
-            ))}
+        </section>
+
+        <section id="knowledge" className="flex min-h-screen items-center px-6 py-24">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="mb-10 rounded-3xl border border-cyan-300/10 bg-black/35 p-7 backdrop-blur-xl"><p className="text-[10px] font-bold tracking-[0.4em] text-cyan-300">CENTER CONSOLE · KNOWLEDGE SYSTEM</p><h2 className="mt-3 text-4xl font-black sm:text-5xl">Choose a <span className="text-cyan-300">route.</span></h2></div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {panels.slice(1, 4).map(([num, title, text]) => <motion.article key={num} whileHover={{ y: -6 }} className="min-h-52 rounded-3xl border border-cyan-300/10 bg-[#07121d]/85 p-7 shadow-2xl backdrop-blur-xl"><span className="text-xs font-black text-cyan-400">{num}</span><h3 className="mt-6 text-xl font-black">{title}</h3><p className="mt-3 leading-7 text-slate-400">{text}</p><button className="mt-7 text-[10px] font-black tracking-widest text-cyan-300">OPEN DISPLAY →</button></motion.article>)}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="log" className="bg-white px-6 py-28 md:py-36">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-xs font-bold uppercase tracking-[0.35em] text-sky-600">Knowledge log</p>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <h2 className="text-4xl font-black sm:text-5xl">Notes from the <span className="text-sky-600">journey.</span></h2>
-            <button className="text-sm font-bold text-sky-600">VIEW ALL NOTES →</button>
+        <section id="log" className="flex min-h-screen items-center px-6 py-24">
+          <div className="mx-auto w-full max-w-6xl rounded-[2rem] border border-white/10 bg-black/45 p-8 backdrop-blur-xl sm:p-12">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-cyan-300">NAVIGATION COMPUTER · KNOWLEDGE LOG</p>
+            <div className="mt-5 grid gap-6 md:grid-cols-3">
+              {["AI is becoming a creative co-pilot", "Building things teaches differently", "Small ideas can become systems"].map((title, i) => <article key={title} className="rounded-3xl border border-white/10 bg-white/[0.03] p-7"><p className="text-[10px] font-bold tracking-widest text-cyan-400">LOG 00{i + 1}</p><h3 className="mt-5 text-2xl font-black">{title}</h3><p className="mt-4 text-sm leading-7 text-slate-400">A place for lessons, observations, experiments and ideas worth remembering.</p><button className="mt-7 text-[10px] font-black tracking-widest text-cyan-300">READ LOG →</button></article>)}
+            </div>
           </div>
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {log.map(([label, title, text]) => (
-              <article key={label} className="group rounded-[2rem] border border-slate-100 bg-slate-50 p-7 shadow-lg transition hover:-translate-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-sky-500">{label}</p>
-                <h3 className="mt-5 text-2xl font-black">{title}</h3>
-                <p className="mt-4 leading-7 text-slate-500">{text}</p>
-                <button className="mt-7 text-sm font-bold text-sky-600">READ NOTE →</button>
-              </article>
-            ))}
+        </section>
+
+        <section id="resources" className="flex min-h-screen items-center px-6 py-24">
+          <div className="mx-auto w-full max-w-6xl rounded-[2rem] border border-cyan-300/10 bg-[#07121d]/80 p-8 shadow-2xl backdrop-blur-xl sm:p-12">
+            <p className="text-[10px] font-bold tracking-[0.4em] text-cyan-300">UTILITY PANEL · RESOURCES</p><h2 className="mt-4 text-4xl font-black sm:text-6xl">Tools for the <span className="text-cyan-300">journey.</span></h2>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">{["AI TOOLS", "TEMPLATES", "USEFUL RESOURCES"].map((x) => <div key={x} className="rounded-2xl border border-white/10 bg-black/30 p-7"><span className="text-sm font-black text-cyan-300">◈</span><h3 className="mt-5 font-black">{x}</h3><p className="mt-2 text-sm text-slate-500">Curated resources from Captain B&apos;s journey.</p></div>)}</div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section className="relative overflow-hidden bg-sky-100 px-6 py-36 text-center">
-        <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-white/60 blur-3xl" />
-        <div className="relative mx-auto max-w-4xl">
-          <p className="text-xs font-bold uppercase tracking-[0.4em] text-sky-600">Observation deck</p>
-          <h2 className="mt-5 text-5xl font-black leading-tight sm:text-7xl">Stay curious.<br /><span className="text-sky-600">Go further.</span></h2>
-          <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-slate-600">The destination is always changing. The best part is learning something new along the way.</p>
-        </div>
-      </section>
-
-      <section id="contact" className="bg-white px-6 py-28 text-center md:py-36">
-        <p className="text-xs font-bold uppercase tracking-[0.35em] text-sky-600">Communication panel</p>
-        <h2 className="mt-5 text-5xl font-black sm:text-7xl">Let&apos;s <span className="text-sky-600">connect.</span></h2>
-        <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-500">Have an idea, question or topic worth exploring? Send it to Captain B.</p>
-        <button className="mt-9 rounded-full bg-sky-600 px-9 py-4 font-bold text-white shadow-xl shadow-sky-300/30 transition hover:scale-105 hover:bg-sky-700">START A CONVERSATION →</button>
-      </section>
-
-      <footer className="border-t border-slate-100 bg-slate-50 px-6 py-10">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
-          <div><p className="font-black">CAPTAIN <span className="text-sky-600">B</span></p><p className="text-xs text-slate-400">A personal space for ideas, learning and sharing.</p></div>
-          <p className="text-xs text-slate-400">© 2026 Captain B</p>
-        </div>
-      </footer>
+        <section id="connect" className="flex min-h-screen items-center justify-center px-6 py-24 text-center">
+          <div className="max-w-3xl rounded-[2rem] border border-cyan-300/15 bg-black/45 p-10 shadow-2xl backdrop-blur-xl sm:p-16"><p className="text-[10px] font-bold tracking-[0.5em] text-cyan-300">COMMUNICATION CHANNEL · OPEN</p><h2 className="mt-5 text-5xl font-black sm:text-7xl">Let&apos;s explore<br /><span className="text-cyan-300">something new.</span></h2><p className="mx-auto mt-7 max-w-xl leading-8 text-slate-400">Have a question, idea or topic worth exploring? Bring it into the cockpit.</p><button className="mt-9 rounded-full bg-cyan-400 px-9 py-4 text-xs font-black tracking-widest text-[#021019] shadow-xl shadow-cyan-400/20">START A CONVERSATION →</button></div>
+        </section>
+      </div>
     </main>
   );
 }
