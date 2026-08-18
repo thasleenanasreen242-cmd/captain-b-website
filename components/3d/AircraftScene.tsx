@@ -6,29 +6,34 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 const content = [
-  ["CAPTAIN B", "DIGITAL CREATOR · KNOWLEDGE SHARER", [-2.2, 1.35, -5.5] as [number,number,number], 2.9],
-  ["AI & TECHNOLOGY", "AI · FUTURE TECH · EXPERIMENTS", [2.2, 1.35, -3.0] as [number,number,number], 3.0],
-  ["BUSINESS & MARKETING", "BRANDING · STRATEGY · GROWTH", [-2.2, 1.35, -0.4] as [number,number,number], 3.0],
-  ["KNOWLEDGE LOG", "INSIGHTS · CASES · LESSONS", [2.2, 1.35, 2.3] as [number,number,number], 2.9],
-  ["RESOURCES", "TOOLS · TEMPLATES · REFERENCES", [-2.2, 1.35, 5.0] as [number,number,number], 2.9],
-  ["CONNECT", "OPEN A COMMUNICATION CHANNEL", [2.2, 1.35, 7.4] as [number,number,number], 2.7],
+  { title: "CAPTAIN B", sub: "PERSONAL BRAND · STORY · MISSION", body: "Meet Captain B — a knowledge-sharing personal brand built around ideas, technology, creativity and practical learning.", slug: "about", position: [-2.2, 1.35, -5.5] as [number,number,number], width: 3.0 },
+  { title: "AI & TECHNOLOGY", sub: "AI · FUTURE TECH · EXPERIMENTS", body: "Discover AI tools, emerging technology, experiments, workflows and useful ways to turn new technology into real outcomes.", slug: "ai", position: [2.2, 1.35, -3.0] as [number,number,number], width: 3.0 },
+  { title: "BUSINESS & MARKETING", sub: "BRANDING · STRATEGY · GROWTH", body: "Practical thinking about branding, digital marketing, business ideas, positioning, growth and building digital experiences.", slug: "business", position: [-2.2, 1.35, -0.4] as [number,number,number], width: 3.0 },
+  { title: "KNOWLEDGE LOG", sub: "INSIGHTS · CASES · LESSONS", body: "A living flight log of lessons, observations, experiments, case studies and ideas worth sharing.", slug: "knowledge", position: [2.2, 1.35, 2.3] as [number,number,number], width: 2.9 },
+  { title: "RESOURCES", sub: "TOOLS · TEMPLATES · REFERENCES", body: "Useful tools, templates, references and systems collected to make learning and creating easier.", slug: "resources", position: [-2.2, 1.35, 5.0] as [number,number,number], width: 2.9 },
+  { title: "CONNECT", sub: "OPEN A COMMUNICATION CHANNEL", body: "Connect with Captain B, start a conversation, collaborate or follow the next flight.", slug: "connect", position: [2.2, 1.35, 7.4] as [number,number,number], width: 2.7 },
 ] as const;
 
-function FloatingContent({ title, sub, position, width }: { title: string; sub: string; position: [number,number,number]; width: number }) {
+function FloatingContent({ item }: { item: typeof content[number] }) {
   const ref = useRef<THREE.Group>(null);
+  const [hover, setHover] = useState(false);
   useFrame(({ clock }) => {
     if (!ref.current) return;
-    ref.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.75 + position[2]) * 0.07;
-    ref.current.rotation.y = Math.sin(clock.elapsedTime * 0.45 + position[2]) * 0.025;
+    ref.current.position.y = item.position[1] + Math.sin(clock.elapsedTime * 0.75 + item.position[2]) * 0.08;
+    ref.current.rotation.y = Math.sin(clock.elapsedTime * 0.45 + item.position[2]) * 0.025;
+    const target = hover ? 1.055 : 1;
+    ref.current.scale.lerp(new THREE.Vector3(target, target, target), 0.12);
   });
-  return <group ref={ref} position={position}>
-    <RoundedBox args={[width, 1.38, 0.08]} radius={0.13} smoothness={5}>
-      <meshStandardMaterial color="#04131e" emissive="#0369a1" emissiveIntensity={0.65} transparent opacity={0.91} metalness={0.35} roughness={0.1} />
+  const enter = () => { window.location.href = `/explore/${item.slug}`; };
+  return <group ref={ref} position={item.position} onClick={enter} onPointerOver={(e) => { e.stopPropagation(); setHover(true); document.body.style.cursor = "pointer"; }} onPointerOut={() => { setHover(false); document.body.style.cursor = "default"; }}>
+    <RoundedBox args={[item.width, 1.52, 0.09]} radius={0.14} smoothness={6}>
+      <meshStandardMaterial color={hover ? "#06263a" : "#04131e"} emissive="#0369a1" emissiveIntensity={hover ? 1.15 : 0.65} transparent opacity={0.93} metalness={0.45} roughness={0.08} />
     </RoundedBox>
-    <mesh position={[0, -0.51, 0.075]}><boxGeometry args={[width * 0.68, 0.025, 0.025]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2.4} /></mesh>
-    <Text position={[0, 0.23, 0.075]} fontSize={0.16} color="#e5fbff" anchorX="center" anchorY="middle" maxWidth={width - 0.25}>{title}</Text>
-    <Text position={[0, -0.13, 0.075]} fontSize={0.082} color="#67e8f9" anchorX="center" anchorY="middle" maxWidth={width - 0.25}>{sub}</Text>
-    <Text position={[0, -0.39, 0.075]} fontSize={0.065} color="#94a3b8" anchorX="center" anchorY="middle">CLICK TO EXPLORE →</Text>
+    <mesh position={[0, -0.56, 0.075]}><boxGeometry args={[item.width * 0.68, 0.026, 0.026]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2.7} /></mesh>
+    <Text position={[0, 0.28, 0.08]} fontSize={0.155} color="#e5fbff" anchorX="center" anchorY="middle" maxWidth={item.width - 0.24}>{item.title}</Text>
+    <Text position={[0, -0.02, 0.08]} fontSize={0.074} color="#67e8f9" anchorX="center" anchorY="middle" maxWidth={item.width - 0.22}>{item.sub}</Text>
+    <Text position={[0, -0.29, 0.08]} fontSize={0.06} color="#cbd5e1" anchorX="center" anchorY="middle" maxWidth={item.width - 0.3}>{item.body}</Text>
+    <Text position={[0, -0.56, 0.08]} fontSize={0.06} color="#a5f3fc" anchorX="center" anchorY="middle">CLICK · ENTER FLIGHT SECTION →</Text>
   </group>;
 }
 
@@ -48,6 +53,14 @@ function Windows() {
   </group>)}</group>)}</group>;
 }
 
+function Seat({ x, z }: { x: number; z: number }) {
+  return <group position={[x, -1.35, z]}>
+    <RoundedBox args={[1.35, 0.45, 1.45]} radius={0.18} smoothness={4}><meshStandardMaterial color="#101923" roughness={0.2} metalness={0.5} /></RoundedBox>
+    <RoundedBox position={[0, 0.85, 0.38]} args={[1.35, 1.55, 0.42]} radius={0.2} smoothness={4}><meshStandardMaterial color="#080f18" roughness={0.18} metalness={0.55} /></RoundedBox>
+    <mesh position={[0, 0.02, 0.76]}><boxGeometry args={[0.95, 0.035, 0.035]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={1.8} /></mesh>
+  </group>;
+}
+
 function Cockpit() {
   return <group position={[0, 0, -8.5]}>
     <RoundedBox position={[0, 1.2, -0.7]} args={[7.8, 4.2, 0.22]} radius={0.38} smoothness={6}><meshStandardMaterial color="#02060b" metalness={0.9} roughness={0.13} /></RoundedBox>
@@ -58,13 +71,7 @@ function Cockpit() {
 }
 
 function PilotPlaceholder() {
-  return <group position={[0, -0.1, -7.35]}>
-    <RoundedBox args={[1.55, 1.8, 0.5]} radius={0.3} smoothness={5}><meshStandardMaterial color="#0a1520" metalness={0.55} roughness={0.2} /></RoundedBox>
-    <mesh position={[0, 1.22, 0]}><sphereGeometry args={[0.58, 24, 16]} /><meshStandardMaterial color="#9c684b" roughness={0.55} /></mesh>
-    <RoundedBox position={[0, 1.62, 0]} args={[1.25, 0.24, 0.65]} radius={0.08} smoothness={4}><meshStandardMaterial color="#07111b" metalness={0.75} roughness={0.15} /></RoundedBox>
-    <mesh position={[0, 1.75, 0]}><boxGeometry args={[1.3, 0.04, 0.7]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2} /></mesh>
-    <Text position={[0, -1.35, 0]} fontSize={0.14} color="#67e8f9" anchorX="center">CAPTAIN B · PILOT</Text>
-  </group>;
+  return <group position={[0, -0.1, -7.35]}><RoundedBox args={[1.55, 1.8, 0.5]} radius={0.3} smoothness={5}><meshStandardMaterial color="#0a1520" metalness={0.55} roughness={0.2} /></RoundedBox><mesh position={[0, 1.22, 0]}><sphereGeometry args={[0.58, 24, 16]} /><meshStandardMaterial color="#9c684b" roughness={0.55} /></mesh><RoundedBox position={[0, 1.62, 0]} args={[1.25, 0.24, 0.65]} radius={0.08} smoothness={4}><meshStandardMaterial color="#07111b" metalness={0.75} roughness={0.15} /></RoundedBox><mesh position={[0, 1.75, 0]}><boxGeometry args={[1.3, 0.04, 0.7]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2} /></mesh><Text position={[0, -1.35, 0]} fontSize={0.14} color="#67e8f9" anchorX="center">CAPTAIN B · PILOT</Text></group>;
 }
 
 function OutsideWorld() {
@@ -81,5 +88,5 @@ function CameraMotion() {
 }
 
 export default function AircraftScene() {
-  return <div className="pointer-events-none fixed inset-0 z-0 h-screen w-full"><Canvas camera={{ position: [0, 0.2, 6.8], fov: 64 }} dpr={[1, 1.5]}><color attach="background" args={["#010409"]} /><fog attach="fog" args={["#020812", 7, 34]} /><ambientLight intensity={0.42} /><directionalLight position={[0, 7, -6]} intensity={1.6} color="#d8f3ff" /><pointLight position={[0, 1, -7]} intensity={6} distance={18} color="#0ea5e9" /><pointLight position={[0, 2, 5]} intensity={2.2} distance={13} color="#22d3ee" /><Environment preset="night" /><OutsideWorld /><AircraftShell /><Windows /><Cockpit /><PilotPlaceholder />{content.map(([title, sub, position, width]) => <FloatingContent key={title} title={title} sub={sub} position={position} width={width} />)}<CameraMotion /></Canvas></div>;
+  return <div className="fixed inset-0 z-0 h-screen w-full"><Canvas camera={{ position: [0, 0.2, 6.8], fov: 64 }} dpr={[1, 1.5]}><color attach="background" args={["#010409"]} /><fog attach="fog" args={["#020812", 7, 34]} /><ambientLight intensity={0.42} /><directionalLight position={[0, 7, -6]} intensity={1.6} color="#d8f3ff" /><pointLight position={[0, 1, -7]} intensity={6} distance={18} color="#0ea5e9" /><pointLight position={[0, 2, 5]} intensity={2.2} distance={13} color="#22d3ee" /><Environment preset="night" /><OutsideWorld /><AircraftShell /><Windows /><Cockpit /><PilotPlaceholder />{[-1.8,1.8].map((x) => <Seat key={x} x={x} z={-2.2} />)}{[-1.8,1.8].map((x) => <Seat key={x} x={x} z={3.2} />)}{content.map((item) => <FloatingContent key={item.title} item={item} />)}<CameraMotion /></Canvas></div>;
 }
