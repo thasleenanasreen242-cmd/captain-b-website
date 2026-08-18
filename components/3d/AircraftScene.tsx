@@ -5,22 +5,30 @@ import { Environment, RoundedBox, Text } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-function HoloPanel({ position, title, sub, width = 2.4 }: { position: [number, number, number]; title: string; sub: string; width?: number }) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame(({ clock }) => { if (ref.current) ref.current.rotation.y = Math.sin(clock.elapsedTime * 0.5 + position[2]) * 0.025; });
-  return <group ref={ref} position={position}>
-    <RoundedBox args={[width, 1.45, 0.08]} radius={0.08} smoothness={4}><meshStandardMaterial color="#03121c" emissive="#0369a1" emissiveIntensity={0.5} transparent opacity={0.9} metalness={0.35} roughness={0.12} /></RoundedBox>
-    <mesh position={[0, -0.52, 0.07]}><boxGeometry args={[width * 0.7, 0.025, 0.025]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2.2} /></mesh>
-    <Text position={[0, 0.22, 0.07]} fontSize={0.17} color="#d9fbff" anchorX="center" anchorY="middle">{title}</Text>
-    <Text position={[0, -0.13, 0.07]} fontSize={0.095} color="#67e8f9" anchorX="center" anchorY="middle">{sub}</Text>
-  </group>;
-}
+const content = [
+  ["CAPTAIN B", "DIGITAL CREATOR · KNOWLEDGE SHARER", [-2.2, 1.35, -5.5] as [number,number,number], 2.9],
+  ["AI & TECHNOLOGY", "AI · FUTURE TECH · EXPERIMENTS", [2.2, 1.35, -3.0] as [number,number,number], 3.0],
+  ["BUSINESS & MARKETING", "BRANDING · STRATEGY · GROWTH", [-2.2, 1.35, -0.4] as [number,number,number], 3.0],
+  ["KNOWLEDGE LOG", "INSIGHTS · CASES · LESSONS", [2.2, 1.35, 2.3] as [number,number,number], 2.9],
+  ["RESOURCES", "TOOLS · TEMPLATES · REFERENCES", [-2.2, 1.35, 5.0] as [number,number,number], 2.9],
+  ["CONNECT", "OPEN A COMMUNICATION CHANNEL", [2.2, 1.35, 7.4] as [number,number,number], 2.7],
+] as const;
 
-function Seat({ x, z }: { x: number; z: number }) {
-  return <group position={[x, -1.35, z]}>
-    <RoundedBox args={[1.35, 0.45, 1.45]} radius={0.18} smoothness={4}><meshStandardMaterial color="#101923" roughness={0.2} metalness={0.5} /></RoundedBox>
-    <RoundedBox position={[0, 0.85, 0.38]} args={[1.35, 1.55, 0.42]} radius={0.2} smoothness={4}><meshStandardMaterial color="#080f18" roughness={0.18} metalness={0.55} /></RoundedBox>
-    <mesh position={[0, 0.02, 0.76]}><boxGeometry args={[0.95, 0.035, 0.035]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={1.8} /></mesh>
+function FloatingContent({ title, sub, position, width }: { title: string; sub: string; position: [number,number,number]; width: number }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    ref.current.position.y = position[1] + Math.sin(clock.elapsedTime * 0.75 + position[2]) * 0.07;
+    ref.current.rotation.y = Math.sin(clock.elapsedTime * 0.45 + position[2]) * 0.025;
+  });
+  return <group ref={ref} position={position}>
+    <RoundedBox args={[width, 1.38, 0.08]} radius={0.13} smoothness={5}>
+      <meshStandardMaterial color="#04131e" emissive="#0369a1" emissiveIntensity={0.65} transparent opacity={0.91} metalness={0.35} roughness={0.1} />
+    </RoundedBox>
+    <mesh position={[0, -0.51, 0.075]}><boxGeometry args={[width * 0.68, 0.025, 0.025]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2.4} /></mesh>
+    <Text position={[0, 0.23, 0.075]} fontSize={0.16} color="#e5fbff" anchorX="center" anchorY="middle" maxWidth={width - 0.25}>{title}</Text>
+    <Text position={[0, -0.13, 0.075]} fontSize={0.082} color="#67e8f9" anchorX="center" anchorY="middle" maxWidth={width - 0.25}>{sub}</Text>
+    <Text position={[0, -0.39, 0.075]} fontSize={0.065} color="#94a3b8" anchorX="center" anchorY="middle">CLICK TO EXPLORE →</Text>
   </group>;
 }
 
@@ -45,7 +53,6 @@ function Cockpit() {
     <RoundedBox position={[0, 1.2, -0.7]} args={[7.8, 4.2, 0.22]} radius={0.38} smoothness={6}><meshStandardMaterial color="#02060b" metalness={0.9} roughness={0.13} /></RoundedBox>
     <RoundedBox position={[0, 1.2, -0.53]} args={[7.05, 3.45, 0.08]} radius={0.3} smoothness={6}><meshStandardMaterial color="#06223a" emissive="#075985" emissiveIntensity={0.3} transparent opacity={0.9} roughness={0.04} /></RoundedBox>
     <RoundedBox position={[0, -0.65, 0]} args={[8.5, 1.35, 1.2]} radius={0.22} smoothness={5}><meshStandardMaterial color="#080e16" metalness={0.85} roughness={0.17} /></RoundedBox>
-    {[-2.7, -1.35, 0, 1.35, 2.7].map((x, i) => <HoloPanel key={x} position={[x, 0.05, -0.65]} title={["ALTITUDE", "AI", "NAV", "IDEAS", "LOG"][i]} sub={["38,000 FT", "ONLINE", "CRUISE", "EXPLORE", "FLIGHT 001"][i]} width={1.05} />)}
     <Text position={[0, 2.72, -0.48]} fontSize={0.19} color="#67e8f9" anchorX="center">CAPTAIN B · KNOWLEDGE FLIGHT SYSTEM</Text>
   </group>;
 }
@@ -57,18 +64,6 @@ function PilotPlaceholder() {
     <RoundedBox position={[0, 1.62, 0]} args={[1.25, 0.24, 0.65]} radius={0.08} smoothness={4}><meshStandardMaterial color="#07111b" metalness={0.75} roughness={0.15} /></RoundedBox>
     <mesh position={[0, 1.75, 0]}><boxGeometry args={[1.3, 0.04, 0.7]} /><meshStandardMaterial color="#22d3ee" emissive="#22d3ee" emissiveIntensity={2} /></mesh>
     <Text position={[0, -1.35, 0]} fontSize={0.14} color="#67e8f9" anchorX="center">CAPTAIN B · PILOT</Text>
-  </group>;
-}
-
-function CompartmentSystems() {
-  return <group>
-    <HoloPanel position={[-2.1, 1.25, -5.4]} title="CAPTAIN B" sub="IDENTITY / JOURNEY" width={2.7} />
-    <HoloPanel position={[2.1, 1.25, -3.4]} title="NAVIGATION" sub="AI · BUSINESS · MARKETING" width={2.9} />
-    <HoloPanel position={[-2.15, 1.25, -0.8]} title="KNOWLEDGE LOG" sub="NOTES / INSIGHTS / CASES" width={2.9} />
-    <HoloPanel position={[2.15, 1.25, 1.9]} title="RESOURCES" sub="TOOLS / TEMPLATES / LINKS" width={2.9} />
-    <HoloPanel position={[-2.1, 1.25, 4.7]} title="PROJECT LOUNGE" sub="BUILDS / EXPERIMENTS" width={2.8} />
-    <HoloPanel position={[2.1, 1.25, 7.1]} title="COMMUNICATION" sub="OPEN CHANNEL" width={2.8} />
-    {[-2.7, 2.7].map((x) => <group key={x} position={[x, 2.35, 2.5]}><RoundedBox args={[1.5, 0.16, 0.9]} radius={0.08} smoothness={4}><meshStandardMaterial color="#080e15" metalness={0.85} roughness={0.18} /></RoundedBox><Text position={[0, 0.18, 0]} fontSize={0.08} color="#67e8f9" anchorX="center">OPEN</Text></group>)}
   </group>;
 }
 
@@ -86,5 +81,5 @@ function CameraMotion() {
 }
 
 export default function AircraftScene() {
-  return <div className="pointer-events-none fixed inset-0 z-0 h-screen w-full"><Canvas camera={{ position: [0, 0.2, 6.8], fov: 64 }} dpr={[1, 1.5]}><color attach="background" args={["#010409"]} /><fog attach="fog" args={["#020812", 7, 34]} /><ambientLight intensity={0.42} /><directionalLight position={[0, 7, -6]} intensity={1.6} color="#d8f3ff" /><pointLight position={[0, 1, -7]} intensity={6} distance={18} color="#0ea5e9" /><pointLight position={[0, 2, 5]} intensity={2.2} distance={13} color="#22d3ee" /><Environment preset="night" /><OutsideWorld /><AircraftShell /><Windows /><Cockpit /><PilotPlaceholder /><CompartmentSystems /><CameraMotion /></Canvas></div>;
+  return <div className="pointer-events-none fixed inset-0 z-0 h-screen w-full"><Canvas camera={{ position: [0, 0.2, 6.8], fov: 64 }} dpr={[1, 1.5]}><color attach="background" args={["#010409"]} /><fog attach="fog" args={["#020812", 7, 34]} /><ambientLight intensity={0.42} /><directionalLight position={[0, 7, -6]} intensity={1.6} color="#d8f3ff" /><pointLight position={[0, 1, -7]} intensity={6} distance={18} color="#0ea5e9" /><pointLight position={[0, 2, 5]} intensity={2.2} distance={13} color="#22d3ee" /><Environment preset="night" /><OutsideWorld /><AircraftShell /><Windows /><Cockpit /><PilotPlaceholder />{content.map(([title, sub, position, width]) => <FloatingContent key={title} title={title} sub={sub} position={position} width={width} />)}<CameraMotion /></Canvas></div>;
 }
